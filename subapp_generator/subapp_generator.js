@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 const prompt = promptSync();
 
-console.log(chalk.blue('Create a subapp'));
+console.log(chalk.blue('Welcome to the subapp generator!'));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const __parentDir = path.dirname(__dirname);
@@ -26,6 +26,7 @@ const subdirectories = [
   'tests',
 ];
 
+console.log(chalk.yellow('Creating subdirectories...'));
 for (const subdir of subdirectories) {
   const subdirPath = path.join(subappDir, subdir);
   fs.mkdirSync(subdirPath);
