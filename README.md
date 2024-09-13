@@ -1,6 +1,8 @@
 # Multi App Backend
 
 * Utilizing NestJS and ExpressJS
+* Utilizing PostgreSQL and TypeORM
+  * ```yarn add @nestjs/typeorm typeorm pg```
 
 ## App Written using Nest.JS
 
