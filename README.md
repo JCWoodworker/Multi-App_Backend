@@ -9,7 +9,7 @@
 
 ## TODO
 
-* [ ] Setup Subapp Generator
+* [x] Setup Subapp Generator
 * [ ] Setup IAM
   * [ ] Setup User Resources
   * [ ] Setup Auth
