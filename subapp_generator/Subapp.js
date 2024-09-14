@@ -28,8 +28,10 @@ export class Subapp {
     this.createSubappDirectory();
     try {
       await this.createSubDirectories();
+      await this.generateMigrations();
+      await this.generateResources();
     } catch (error) {
-      console.error(`Error creating subdirectories: ${error}`);
+      console.error(`Error : ${error}`);
       process.exit(1);
     }
   }
@@ -83,10 +85,6 @@ export class Subapp {
       const subdirPath = path.join(this.getSubappDirectoryPath(), subdir);
       fs.mkdirSync(subdirPath);
 
-      if (subdir === 'migrations') {
-        await this.generateMigrations();
-      }
-
       if (subdir === subdirectories[subdirectories.length - 1]) {
         console.log(chalk.green(`Created subdirectory: ${subdir}\n`));
       } else {
@@ -129,29 +127,9 @@ export class Subapp {
   }
 
   //TODO
-  async generateEntities() {}
-  async generateDtos() {}
-
-  async generateModule() {
-    const command = `npx typeorm migration:create \
-    ${this.getSubappDirectoryPath()}/migrations/create-table-${tableName}`;
-
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing TypeORM command: ${error}`);
-        reject(error);
-        return;
-      }
-      if (stderr) {
-        console.error(`TypeORM command stderr: ${stderr}`);
-      }
-      console.log(chalk.green(`Created migration file for: ${tableName}`));
-      resolve();
-    });
+  async generateResources() {
+    console.log(chalk.yellow('\nGenerating resources...'));
   }
-
-  async generateMainController() {}
   async generateSubControllers() {}
-  async generateMainService() {}
   async generateSubServices() {}
 }
