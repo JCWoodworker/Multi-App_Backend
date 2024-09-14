@@ -7,7 +7,7 @@ async function main() {
   try {
     const subapp = await Subapp.create();
     if (subapp) {
-      console.log(chalk.green('Subapp created successfully!\n'));
+      console.log(chalk.green('\nSubapp created successfully!\n'));
     }
   } catch (error) {
     console.error(`Error creating subapp: ${error}`);
