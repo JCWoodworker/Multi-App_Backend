@@ -7,6 +7,15 @@
 
 * typeorm-cli.config tells TypeORM how to connect to the database and which files are entities and migrations
 
+## TODO
+
+* [ ] Setup Subapp Generator
+* [ ] Setup IAM
+  * [ ] Setup User Resources
+  * [ ] Setup Auth
+  * [ ] Setup Google Login
+* [ ] Setup Postgres Database
+
 -------------------
 
 ## App Written using Nest.JS
