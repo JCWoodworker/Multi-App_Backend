@@ -18,19 +18,19 @@
 
 -------------------
 
-## App Written using Nest.JS
+## App Written using Nest.JS - ALl of the following is from the original NestJS starter README
 
-### Description
+### Description (NestJS)
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-### Installation
+### Installation (NestJS)
 
 ```bash
 yarn install
 ```
 
-### Running the app
+### Running the app (NestJS)
 
 ```bash
 # development
@@ -43,7 +43,7 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-### Test
+### Test (NestJS)
 
 ```bash
 # unit tests
@@ -56,16 +56,16 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
-### Support
+### Support (NestJS)
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-### Stay in touch
+### Stay in touch (NestJS)
 
 * Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
 * Website - [https://nestjs.com](https://nestjs.com/)
 * Twitter - [@nestframework](https://twitter.com/nestframework)
 
-### License
+### License (NestJS)
 
 Nest is [MIT licensed](LICENSE).
