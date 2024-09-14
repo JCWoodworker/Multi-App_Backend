@@ -127,4 +127,31 @@ export class Subapp {
     await Promise.all(migrationPromises);
     console.log('');
   }
+
+  //TODO
+  async generateEntities() {}
+  async generateDtos() {}
+
+  async generateModule() {
+    const command = `npx typeorm migration:create \
+    ${this.getSubappDirectoryPath()}/migrations/create-table-${tableName}`;
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing TypeORM command: ${error}`);
+        reject(error);
+        return;
+      }
+      if (stderr) {
+        console.error(`TypeORM command stderr: ${stderr}`);
+      }
+      console.log(chalk.green(`Created migration file for: ${tableName}`));
+      resolve();
+    });
+  }
+
+  async generateMainController() {}
+  async generateSubControllers() {}
+  async generateMainService() {}
+  async generateSubServices() {}
 }
