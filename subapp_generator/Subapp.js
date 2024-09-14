@@ -25,11 +25,16 @@ export class Subapp {
   async initialize() {
     this.createSubappName();
     this.createSubappNickname();
-    this.createSubappDirectory();
+    try {
+      await this.generateResources();
+    } catch (error) {
+      console.error(`Error : ${error}`);
+      process.exit(1);
+    }
+
     try {
       await this.createSubDirectories();
       await this.generateMigrations();
-      await this.generateResources();
     } catch (error) {
       console.error(`Error : ${error}`);
       process.exit(1);
@@ -54,10 +59,6 @@ export class Subapp {
   getSubappDirectoryPath() {
     const parentDirectory = this.getParentDirectoryPath();
     return path.join(parentDirectory, 'src/subapps', this.name);
-  }
-
-  createSubappDirectory() {
-    fs.mkdirSync(this.getSubappDirectoryPath());
   }
 
   getTableAndEntityNames() {
@@ -129,8 +130,8 @@ export class Subapp {
   //TODO
   async generateResources() {
     console.log(chalk.yellow('\nGenerating resources...'));
-    const command = `nest generate resource ${this.name} --flat`;
 
+    const command = `nest generate resource subapps/${this.name} --flat`;
     const childProcess = spawn('npx', command.split(' '), { stdio: 'inherit' }); // Use spawn with stdio: 'inherit'
 
     childProcess.on('close', (code) => {
