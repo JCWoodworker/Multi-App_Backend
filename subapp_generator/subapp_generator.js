@@ -1,18 +1,17 @@
 import chalk from 'chalk';
 import { Subapp } from './Subapp.js';
 
-const newSubapp = new Subapp();
-
 console.log(chalk.blue('Welcome to the subapp generator!'));
 
-newSubapp.createSubappName();
-newSubapp.createSubappNickname();
-newSubapp.createSubappDirectory();
-try {
-  await newSubapp.createSubDirectories();
-} catch (error) {
-  console.error(`Error creating subdirectories: ${error}`);
-  process.exit(1);
+async function main() {
+  try {
+    const subapp = await Subapp.create();
+    if (subapp) {
+      console.log(chalk.green('Subapp created successfully!'));
+    }
+  } catch (error) {
+    console.error(`Error creating subapp: ${error}`);
+  }
 }
 
-console.log(chalk.green(`Subapp ${newSubapp.name} created`));
+main();

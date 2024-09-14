@@ -11,9 +11,27 @@ import { sanitizeName } from './utilities.js';
 const prompt = promptSync();
 
 export class Subapp {
-  constructor() {
-    name: '';
-    nickName: '';
+  name = '';
+  nickName = '';
+
+  constructor() {}
+
+  static async create() {
+    const subapp = new Subapp();
+    await subapp.initialize();
+    return subapp;
+  }
+
+  async initialize() {
+    this.createSubappName();
+    this.createSubappNickname();
+    this.createSubappDirectory();
+    try {
+      await this.createSubDirectories();
+    } catch (error) {
+      console.error(`Error creating subdirectories: ${error}`);
+      process.exit(1);
+    }
   }
 
   createSubappName() {
@@ -62,33 +80,49 @@ export class Subapp {
     const tableAndEntityNames = this.getTableAndEntityNames();
     console.log(chalk.yellow('\nCreating subdirectories...'));
 
+    const migrationPromises = []; // Array to store migration creation promises
+
     for (const subdir of subdirectories) {
       const subdirPath = path.join(this.getSubappDirectoryPath(), subdir);
       fs.mkdirSync(subdirPath);
 
       if (subdir === 'migrations') {
         if (tableAndEntityNames.length > 0) {
-          tableAndEntityNames.map((tableName) => {
+          tableAndEntityNames.forEach((tableName) => {
             const command = `npx typeorm migration:create \
               ${this.getSubappDirectoryPath()}/migrations/create-table-${tableName}.migration`;
 
-            exec(command, (error, stdout, stderr) => {
-              if (error) {
-                console.error(`Error executing TypeORM command: ${error}`);
-                return;
-              }
-              if (stderr) {
-                console.error(`TypeORM command stderr: ${stderr}`);
-              }
-              console.log(stdout);
-              console.log(
-                chalk.green(`Created migration file for: ${tableName}`),
-              );
+            // Create a promise for each exec call and store it in the array
+            const migrationPromise = new Promise((resolve, reject) => {
+              exec(command, (error, stdout, stderr) => {
+                if (error) {
+                  console.error(`Error executing TypeORM command: ${error}`);
+                  reject(error); // Reject the promise on error
+                  return;
+                }
+                if (stderr) {
+                  console.error(`TypeORM command stderr: ${stderr}`);
+                }
+                console.log(stdout);
+                console.log(
+                  chalk.green(`Created migration file for: ${tableName}\n`),
+                );
+                resolve(); // Resolve the promise when the migration is created
+              });
             });
+            migrationPromises.push(migrationPromise);
           });
         }
       }
-      console.log(chalk.green(`Created subdirectory: ${subdir}`));
+
+      if (subdir === subdirectories[subdirectories.length - 1]) {
+        console.log(chalk.green(`Created subdirectory: ${subdir}\n`));
+      } else {
+        console.log(chalk.green(`Created subdirectory: ${subdir}`));
+      }
     }
+
+    // Wait for all migration promises to resolve before continuing
+    await Promise.all(migrationPromises);
   }
 }
