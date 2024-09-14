@@ -22,9 +22,6 @@ export class Subapp {
     return subapp;
   }
 
-  // TODO: fix this!!
-  // This is all out of wack.
-  // methods are not awaiting previous methods and erroring out
   async initialize() {
     this.createSubappName();
     this.createSubappNickname();
@@ -38,6 +35,7 @@ export class Subapp {
     try {
       await this.createSubDirectories();
       await this.generateMigrations();
+      await this.moveSpecFilesToTests();
     } catch (error) {
       console.error(`Error : ${error}`);
       process.exit(1);
@@ -163,4 +161,25 @@ export class Subapp {
 
   async generateSubControllers() {}
   async generateSubServices() {}
+
+  async moveSpecFilesToTests() {
+    const subappDirPath = this.getSubappDirectoryPath();
+    const testDirPath = path.join(subappDirPath, 'tests');
+
+    try {
+      const files = await fs.promises.readdir(subappDirPath);
+
+      for (const file of files) {
+        if (file.endsWith('.spec.ts')) {
+          const currentPath = path.join(subappDirPath, file);
+          const newPath = path.join(testDirPath, file);
+
+          await fs.promises.rename(currentPath, newPath);
+          console.log(chalk.green(`Moved ${file} to tests folder`));
+        }
+      }
+    } catch (error) {
+      console.error(chalk.red(`Error moving spec files: ${error.message}`));
+    }
+  }
 }
