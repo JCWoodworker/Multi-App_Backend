@@ -14,7 +14,7 @@
 
 ## TODO
 
-* [ ] Move logic to Subapp class
+* [x] Move logic to Subapp class
 * [ ] Add tests
 * [ ] Add documentation to README
 * [ ] fix bug where table names prompt keeps re-logging every time a key is pressed
