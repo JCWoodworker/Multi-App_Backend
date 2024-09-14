@@ -1,9 +1,1 @@
-export const subdirectories = [
-  'dto',
-  'entities',
-  'migrations',
-  'resources',
-  'types',
-  'enums',
-  'tests',
-];
+export const subdirectories = ['migrations', 'resources', 'types', 'tests'];

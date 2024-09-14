@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import promptSync from 'prompt-sync';
 import chalk from 'chalk';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 
 import { subdirectories } from './constants.js';
@@ -129,6 +129,21 @@ export class Subapp {
   //TODO
   async generateResources() {
     console.log(chalk.yellow('\nGenerating resources...'));
+    const command = `nest generate resource ${this.name} --flat`;
+
+    const childProcess = spawn('npx', command.split(' '), { stdio: 'inherit' }); // Use spawn with stdio: 'inherit'
+
+    childProcess.on('close', (code) => {
+      if (code === 0) {
+        console.log(
+          chalk.green(
+            `Created Module, Controller, Service, DTO, and entity for ${this.name}`,
+          ),
+        );
+      } else {
+        console.error(chalk.red(`Error generating NestJS resource`));
+      }
+    });
   }
   async generateSubControllers() {}
   async generateSubServices() {}
