@@ -22,6 +22,9 @@ export class Subapp {
     return subapp;
   }
 
+  // TODO: fix this!!
+  // This is all out of wack.
+  // methods are not awaiting previous methods and erroring out
   async initialize() {
     this.createSubappName();
     this.createSubappNickname();
@@ -51,6 +54,10 @@ export class Subapp {
       chalk.blue('Enter subapp nickname: '),
     ).toUpperCase();
     return (this.nickName = sanitizeName(rawNickname));
+  }
+
+  createDirectory() {
+    fs.mkdirSync(this.getSubappDirectoryPath());
   }
   getParentDirectoryPath() {
     return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -131,21 +138,29 @@ export class Subapp {
   async generateResources() {
     console.log(chalk.yellow('\nGenerating resources...'));
 
-    const command = `nest generate resource subapps/${this.name} --flat`;
-    const childProcess = spawn('npx', command.split(' '), { stdio: 'inherit' }); // Use spawn with stdio: 'inherit'
+    const command = `nest generate resource subapps/${this.name}/${this.name} --flat`;
+    const childProcess = spawn('npx', command.split(' '), { stdio: 'inherit' });
 
-    childProcess.on('close', (code) => {
-      if (code === 0) {
-        console.log(
-          chalk.green(
-            `Created Module, Controller, Service, DTO, and entity for ${this.name}`,
-          ),
-        );
-      } else {
-        console.error(chalk.red(`Error generating NestJS resource`));
-      }
+    const { code } = await new Promise((resolve, reject) => {
+      childProcess.on('close', (code) => {
+        resolve({ code });
+      });
+      childProcess.on('error', (error) => {
+        reject(error);
+      });
     });
+
+    if (code === 0) {
+      console.log(
+        chalk.green(
+          `Created Module, Controller, Service, DTO, and entity for ${this.name}`,
+        ),
+      );
+    } else {
+      console.error(chalk.red(`Error generating NestJS resource`));
+    }
   }
+
   async generateSubControllers() {}
   async generateSubServices() {}
 }
