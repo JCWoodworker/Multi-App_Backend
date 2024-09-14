@@ -77,42 +77,14 @@ export class Subapp {
   }
 
   async createSubDirectories() {
-    const tableAndEntityNames = this.getTableAndEntityNames();
     console.log(chalk.yellow('\nCreating subdirectories...'));
-
-    const migrationPromises = []; // Array to store migration creation promises
 
     for (const subdir of subdirectories) {
       const subdirPath = path.join(this.getSubappDirectoryPath(), subdir);
       fs.mkdirSync(subdirPath);
 
       if (subdir === 'migrations') {
-        if (tableAndEntityNames.length > 0) {
-          tableAndEntityNames.forEach((tableName) => {
-            const command = `npx typeorm migration:create \
-              ${this.getSubappDirectoryPath()}/migrations/create-table-${tableName}.migration`;
-
-            // Create a promise for each exec call and store it in the array
-            const migrationPromise = new Promise((resolve, reject) => {
-              exec(command, (error, stdout, stderr) => {
-                if (error) {
-                  console.error(`Error executing TypeORM command: ${error}`);
-                  reject(error); // Reject the promise on error
-                  return;
-                }
-                if (stderr) {
-                  console.error(`TypeORM command stderr: ${stderr}`);
-                }
-                console.log(stdout);
-                console.log(
-                  chalk.green(`Created migration file for: ${tableName}\n`),
-                );
-                resolve(); // Resolve the promise when the migration is created
-              });
-            });
-            migrationPromises.push(migrationPromise);
-          });
-        }
+        await this.generateMigrations();
       }
 
       if (subdir === subdirectories[subdirectories.length - 1]) {
@@ -121,8 +93,38 @@ export class Subapp {
         console.log(chalk.green(`Created subdirectory: ${subdir}`));
       }
     }
+  }
 
-    // Wait for all migration promises to resolve before continuing
+  async generateMigrations() {
+    const migrationPromises = [];
+    const tableAndEntityNames = this.getTableAndEntityNames();
+
+    if (tableAndEntityNames.length > 0) {
+      tableAndEntityNames.forEach((tableName) => {
+        const command = `npx typeorm migration:create \
+          ${this.getSubappDirectoryPath()}/migrations/create-table-${tableName}`;
+
+        const migrationPromise = new Promise((resolve, reject) => {
+          exec(command, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error executing TypeORM command: ${error}`);
+              reject(error);
+              return;
+            }
+            if (stderr) {
+              console.error(`TypeORM command stderr: ${stderr}`);
+            }
+            console.log(
+              chalk.green(`Created migration file for: ${tableName}`),
+            );
+            resolve();
+          });
+        });
+        migrationPromises.push(migrationPromise);
+      });
+    }
+    console.log('');
     await Promise.all(migrationPromises);
+    console.log('');
   }
 }

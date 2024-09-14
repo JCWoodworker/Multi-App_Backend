@@ -5,6 +5,8 @@
   * ```yarn add @nestjs/typeorm typeorm pg```
 * Custom "subapp generator" used to create and tie in each new subapp's backend
 
+* typeorm-cli.config tells TypeORM how to connect to the database and which files are entities and migrations
+
 -------------------
 
 ## App Written using Nest.JS
