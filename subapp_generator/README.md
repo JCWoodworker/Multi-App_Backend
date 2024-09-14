@@ -12,10 +12,9 @@
       * You can leave this blank if you don't want to create any migrations or entities
 3. Subdirectories, entities, and migrations will be created in the subapp directory
 
-
 ## TODO
 
 * Move logic to Subapp class
 * Add tests
 * Add documentation to README
-* 
+*

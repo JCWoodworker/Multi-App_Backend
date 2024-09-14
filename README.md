@@ -3,6 +3,9 @@
 * Utilizing NestJS and ExpressJS
 * Utilizing PostgreSQL and TypeORM
   * ```yarn add @nestjs/typeorm typeorm pg```
+* Custom "subapp generator" used to create and tie in each new subapp's backend
+
+-------------------
 
 ## App Written using Nest.JS
 
