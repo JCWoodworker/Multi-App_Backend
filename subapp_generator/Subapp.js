@@ -36,6 +36,7 @@ export class Subapp {
       await this.createSubDirectories();
       await this.generateMigrations();
       await this.moveSpecFilesToTests();
+      await this.renameMigrationFiles();
     } catch (error) {
       console.error(`Error : ${error}`);
       process.exit(1);
@@ -180,6 +181,34 @@ export class Subapp {
       }
     } catch (error) {
       console.error(chalk.red(`Error moving spec files: ${error.message}`));
+    }
+  }
+
+  async renameMigrationFiles() {
+    const subappDirPath = this.getSubappDirectoryPath();
+    const migrationsDirPath = path.join(subappDirPath, 'migrations');
+
+    try {
+      const files = await fs.promises.readdir(migrationsDirPath);
+
+      for (const file of files) {
+        if (file.endsWith('.migration.ts')) {
+          continue;
+        }
+
+        if (file.endsWith('.ts')) {
+          const currentPath = path.join(migrationsDirPath, file);
+          const newFileName = file.replace('.ts', '.migration.ts');
+          const newPath = path.join(migrationsDirPath, newFileName);
+
+          await fs.promises.rename(currentPath, newPath);
+          console.log(chalk.green(`Renamed ${file} to ${newFileName}`));
+        }
+      }
+    } catch (error) {
+      console.error(
+        chalk.red(`Error renaming migration files: ${error.message}`),
+      );
     }
   }
 }

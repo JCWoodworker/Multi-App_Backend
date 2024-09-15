@@ -9,12 +9,12 @@
 
 ## TODO
 
-* [x] Setup Subapp Generator
-* [ ] Setup IAM
-  * [ ] Setup User Resources
-  * [ ] Setup Auth
-  * [ ] Setup Google Login
-* [ ] Setup Postgres Database
+* [x] Subapp Generator
+* [ ] IAM
+  * [ ] User Resources
+  * [ ] Auth
+  * [ ] Google Login
+* [ ] Postgres Database
 
 -------------------
 
