@@ -1,14 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import promptSync from 'prompt-sync';
+import readlineSync from 'readline-sync';
 import chalk from 'chalk';
 import { exec, spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 
 import { subdirectories } from './constants.js';
 import { sanitizeName } from './utilities.js';
-
-const prompt = promptSync();
 
 export class Subapp {
   name = '';
@@ -44,12 +42,12 @@ export class Subapp {
   }
 
   createSubappName() {
-    const rawName = prompt(chalk.blue('Enter subapp name: ')).toLowerCase();
+    const rawName = readlineSync.question(chalk.blue('Enter subapp name: ')).toLowerCase();
     return (this.name = sanitizeName(rawName));
   }
 
   createSubappNickname() {
-    const rawNickname = prompt(
+    const rawNickname = readlineSync.question(
       chalk.blue('Enter subapp nickname: '),
     ).toUpperCase();
     return (this.nickName = sanitizeName(rawNickname));
@@ -68,7 +66,7 @@ export class Subapp {
   }
 
   getTableAndEntityNames() {
-    const tableNamesInput = prompt(
+    const tableNamesInput = readlineSync.question(
       chalk.blue(
         'Enter comma-separated table names using snake_case for each. * Leave blank and press ENTER if you do not wish to create any migrations or entities at this time.--> ',
       ),
